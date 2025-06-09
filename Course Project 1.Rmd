@@ -55,7 +55,12 @@ activity_data <-fread("activity.csv")
 
 ## What is mean total number of steps taken per day?
 
-1. Calculate the total number of steps taken per day
+1. Creating a new variable called total_steps
+```{r}
+total_steps <- aggregate(steps ~ date, data = activity_data, sum)
+```
+
+2. Calculate the total number of steps taken per day
 
 
 ```{r}
@@ -63,19 +68,19 @@ mean(total_steps$steps, na.rm = T)
 median(total_steps$steps, na.rm = T)
 ```
 
-2. Making a histogram of the total number of steps taken per day
+3. Making a histogram of the total number of steps taken per day
 
 ```{r}
 activity_data$date <- as.Date(activity_data$date)
 total_steps <- aggregate(steps ~ date, data = activity_data, sum)
 plot1 <- ggplot(total_steps, aes(x=steps)) +
-  geom_histogram(fill = "blue", bins = 11) +
+  geom_histogram(fill = "#B24223", bins = 11) +
   labs(title = "Daily Steps", x = "Step Count", y = "Frequency")
 print(plot1)
 ```
 
 
-3. Calculating the mean and median of the total number of steps taken per day
+4. Calculating the mean and median of the total number of steps taken per day
 
 ```{r}
 mean(total_steps$steps, na.rm = T)
@@ -84,5 +89,12 @@ median(total_steps$steps, na.rm = T)
 
 
 
+## What is the average daily activity pattern?
 
+
+1. Making a time series 
+
+```{r}
+interval_steps <- aggregate(steps ~ interval, data = activity_data, mean)
+```
 
