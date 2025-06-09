@@ -47,6 +47,10 @@ download.file(url, destfile = "Factivity.zip")
 unzip("Factivity.zip")
 ```
 
+Reading csv into a data.table.
+```{r}
+activity_data <-fread("activity.csv")
+```
 
 
 
