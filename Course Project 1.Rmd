@@ -18,6 +18,8 @@ This assignment makes use of data from a personal activity monitoring device. Th
 
 The data for this assignment can be downloaded from the course web site:
 
+## The dataset
+
 * Dataset: [Activity monitoring data](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip) [52K]
 
 The variables included in this dataset are:
@@ -159,10 +161,76 @@ replaceNas= function(steps, interval) {
 ```
 
 
-3. Applying a function for replacing missing values
+3. Applying a function for replacing missing values: a new dataset 
 
 ```{r}
 filled_activity_data = activity_data
 filled_activity_data$steps = mapply(replaceNas, filled_activity_data$steps, filled_activity_data$interval)
 ```
+
+
+4. Making a new histogram of the total number of steps taken each day
+
+```{r}
+total_steps_filled <- aggregate(steps ~ date, data = filled_activity_data, sum)
+plot3 <- ggplot(total_steps_filled, aes(x = steps)) + 
+  geom_histogram(fill = "#FBD1AD", bins = 11) + 
+  labs(title = "Daily Steps with replaces NA's", x = "Step Count", y = "Frequency")
+print(plot3)
+```
+
+
+## Are there differences in activity patterns between weekdays and weekends?
+
+1. Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+
+Creating the two new factor variables
+
+```{r}
+filled_activity_data$day <- weekdays(filled_activity_data$date)
+weekday <- c("Monday","Tuesday","Wednesday","Thursday","Friday")
+weekDayOp <- function(dayofweek) {
+  fill = ""
+  if (dayofweek %in% weekday) {
+    fill = "Weekday" }
+  else {
+    fill = "Weekend" }
+  return(fill) }
+
+filled_activity_data$weekday <- mapply(weekDayOp,filled_activity_data$day)
+```
+
+
+Computing the average number of steps per 5-minute interval 
+
+```{r}
+filled_totals_day <- aggregate(steps ~ interval + weekday, data = filled_activity_data, mean)
+```
+
+
+Converting 'interval' column data to a vailid date-time format 
+
+```{r}
+filled_totals_day$time <- as.character(filled_totals_day$interval)
+for (i in 1:2){
+  filled_totals_day$time[i] <- as.character(paste0("0",filled_totals_day$time[i]))
+}
+for (i in 1:12){
+  filled_totals_day$time[i] <- as.character(paste0("00",filled_totals_day$time[i]))
+}
+for (i in 13:120){
+  filled_totals_day$time[i] <- as.character(paste0("0",filled_totals_day$time[i]))
+}
+for (i in 289:290){
+  filled_totals_day$time[i] <- as.character(paste0("0",filled_totals_day$time[i]))
+}
+for (i in 289:300){
+  filled_totals_day$time[i] <- as.character(paste0("0",filled_totals_day$time[i]))
+}
+for (i in 301:408){
+  filled_totals_day$time[i] <- as.character(paste0("0",filled_totals_day$time[i]))
+}
+filled_totals_day$time <- as.POSIXct(filled_totals_day$time, format = "%H%M")
+```
+
 
