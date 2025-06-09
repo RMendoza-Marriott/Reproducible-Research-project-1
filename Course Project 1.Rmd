@@ -146,6 +146,23 @@ mean(nas)
 ```
 
 
+2. Replacing the missing values
+
+```{r}
+replaceNas= function(steps, interval) {
+  replace = NA
+  if (!is.na(steps)) { 
+    replace = steps } 
+  else { 
+    replace = interval_steps[interval_steps$interval == interval, "steps"]}
+  return(replace) }
+```
 
 
+3. Applying a function for replacing missing values
+
+```{r}
+filled_activity_data = activity_data
+filled_activity_data$steps = mapply(replaceNas, filled_activity_data$steps, filled_activity_data$interval)
+```
 
