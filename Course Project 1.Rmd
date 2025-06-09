@@ -1,5 +1,6 @@
 ---
-title: "Course Project 1 Reproducible Research"
+title: "Module 5: Reproducible Research -
+Course Project 1"
 author: "Roddy Mendoza Marriott"
 date: "2025-06-09"
 output: html_document
@@ -98,3 +99,30 @@ median(total_steps$steps, na.rm = T)
 interval_steps <- aggregate(steps ~ interval, data = activity_data, mean)
 ```
 
+
+2. Converting 'interval' column data in a valid time data format
+
+```{r}
+interval_steps$time <- as.character(interval_steps$interval)
+for (i in 1:2){
+  interval_steps$time[i] <- as.character(paste0("0",interval_steps$time[i]))
+}
+for (i in 1:12){
+  interval_steps$time[i] <- as.character(paste0("00",interval_steps$time[i]))
+}
+for (i in 13:120){
+  interval_steps$time[i] <- as.character(paste0("0",interval_steps$time[i]))
+}
+interval_steps$time <- as.POSIXct(interval_steps$time, format = "%H%M")
+```
+
+
+3. Making a time series plot for 24- hour time period
+
+```{r}
+plot2 <- ggplot(interval_steps, aes(x = time, y = steps)) +
+  geom_line(col = "#8EC586") +
+  labs(title = "Time Series Plot of Average Steps Taken", x = "Time of Day", y = "Steps") +
+  scale_x_datetime(labels = date_format("%H:%M", tz = "MST"), date_breaks = "4 hours")
+print(plot2)
+```
