@@ -1,9 +1,10 @@
 ---
-title: "Module 5: Reproducible Research -
-Course Project 1"
+title: "Module 5: Reproducible Research - Course Project 1"
 author: "Roddy Mendoza Marriott"
 date: "2025-06-09"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -242,4 +243,6 @@ plot4 <- ggplot(filled_totals_day, aes(time, steps, col = factor(weekday))) +
 print(plot4)
 
 ```
+
+
 
